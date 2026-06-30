@@ -78,19 +78,19 @@ ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
 -- Anyone can read families (they either know the code or they don't)
 CREATE POLICY "Anyone can read families"
   ON families FOR SELECT
-  TO anon
+  TO authenticated
   USING (true);
 
 -- Anyone can insert a new family
 CREATE POLICY "Anyone can create families"
   ON families FOR INSERT
-  TO anon
+  TO authenticated
   WITH CHECK (true);
 
 -- Only members can update their family
 CREATE POLICY "Members can update family"
   ON families FOR UPDATE
-  TO anon
+  TO authenticated
   USING (true)
   WITH CHECK (true);
 
@@ -100,23 +100,23 @@ CREATE POLICY "Members can update family"
 -- Tasks: anyone can read/write if they provide a valid family_code
 CREATE POLICY "Anyone can read tasks"
   ON tasks FOR SELECT
-  TO anon
+  TO authenticated
   USING (true);
 
 CREATE POLICY "Anyone can insert tasks"
   ON tasks FOR INSERT
-  TO anon
+  TO authenticated
   WITH CHECK (true);
 
 CREATE POLICY "Anyone can update tasks"
   ON tasks FOR UPDATE
-  TO anon
+  TO authenticated
   USING (true)
   WITH CHECK (true);
 
 CREATE POLICY "Anyone can delete tasks"
   ON tasks FOR DELETE
-  TO anon
+  TO authenticated
   USING (true);
 ```
 
@@ -150,15 +150,29 @@ For v1, the app requires an internet connection to read and write data.
    - Enable **Anonymous Sign-In** under **Authentication > Providers**
    - Open the **SQL Editor** and run the schema + RLS policies from the [Data Model](#data-model-postgresql) and [RLS](#row-level-security-rls) sections above
 
-3. **Environment variables via --dart-define**  
-   The app reads Supabase credentials at compile time via `String.fromEnvironment`. Pass them when running or building:
+3. **Environment via JSON config file**  
+   The app reads Supabase credentials at compile time via `String.fromEnvironment`. Create an `env.json` file in the project root (it's gitignored — see `env.example.json` for the template):
+   ```json
+   {
+     "SUPABASE_URL": "https://your-project.supabase.co",
+     "SUPABASE_ANON_KEY": "your-anon-key"
+   }
+   ```
+   Then run or build without typing credentials every time:
    ```bash
-   flutter run --dart-define=SUPABASE_URL=https://your-project.supabase.co --dart-define=SUPABASE_ANON_KEY=your-anon-key
+   flutter run --dart-define-from-file=env.json
    ```
    For a release build:
    ```bash
-   flutter build apk --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
+   flutter build apk --dart-define-from-file=env.json
    ```
+
+---
+
+**Alternatively**, pass them inline (for CI/CD or one-off runs):
+```bash
+flutter run --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
+```
 
 4. **Install dependencies**
    ```bash
@@ -167,7 +181,7 @@ For v1, the app requires an internet connection to read and write data.
 
 5. **Run the app**
    ```bash
-   flutter run --dart-define=SUPABASE_URL=https://your-project.supabase.co --dart-define=SUPABASE_ANON_KEY=your-anon-key
+   flutter run --dart-define-from-file=env.json
    ```
 
 ### First-time setup for two users

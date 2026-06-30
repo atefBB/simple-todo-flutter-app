@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import '../generated/app_localizations.dart';
 
 class EmptyState extends StatelessWidget {
   const EmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -16,14 +19,14 @@ class EmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           Text(
-            'No tasks yet',
+            l10n.noTasksYet,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Colors.grey[600],
                 ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Tap the + button to add your first task',
+            l10n.tapToAdd,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Colors.grey[500],
                 ),

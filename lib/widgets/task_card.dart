@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../generated/app_localizations.dart';
 import '../models/task.dart';
 import '../providers/task_provider.dart';
 
@@ -11,6 +12,7 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<TaskProvider>();
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -35,14 +37,14 @@ class TaskCard extends StatelessWidget {
             : null,
         trailing: IconButton(
           icon: const Icon(Icons.delete_outline),
-          onPressed: () => _confirmDelete(context, provider),
+          onPressed: () => _confirmDelete(context, provider, l10n),
         ),
-        onTap: () => _showTaskDetails(context),
+        onTap: () => _showTaskDetails(context, l10n),
       ),
     );
   }
 
-  void _showTaskDetails(BuildContext context) {
+  void _showTaskDetails(BuildContext context, AppLocalizations l10n) {
     showModalBottomSheet(
       context: context,
       builder: (context) => Padding(
@@ -64,7 +66,7 @@ class TaskCard extends StatelessWidget {
               children: [
                 const Icon(Icons.person_outline, size: 16),
                 const SizedBox(width: 4),
-                Text('Created by: ${task.createdBy}'),
+                Text(l10n.createdBy(task.createdBy)),
               ],
             ),
             if (task.doneAt != null) ...[
@@ -73,7 +75,7 @@ class TaskCard extends StatelessWidget {
                 children: [
                   const Icon(Icons.check_circle_outline, size: 16),
                   const SizedBox(width: 4),
-                  Text('Done: ${_formatDate(task.doneAt!)}'),
+                  Text(l10n.doneDate(_formatDate(task.doneAt!))),
                 ],
               ),
             ],
@@ -82,7 +84,7 @@ class TaskCard extends StatelessWidget {
               children: [
                 const Icon(Icons.schedule, size: 16),
                 const SizedBox(width: 4),
-                Text('Created: ${_formatDate(task.createdAt)}'),
+                Text(l10n.createdDate(_formatDate(task.createdAt))),
               ],
             ),
           ],
@@ -91,23 +93,25 @@ class TaskCard extends StatelessWidget {
     );
   }
 
-  void _confirmDelete(BuildContext context, TaskProvider provider) {
+  void _confirmDelete(
+      BuildContext context, TaskProvider provider, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Task'),
-        content: Text('Delete "${task.title}"?'),
+        title: Text(l10n.deleteTask),
+        content: Text(l10n.deleteConfirm(task.title)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () {
               provider.deleteTask(task.id);
               Navigator.pop(context);
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child:
+                Text(l10n.delete, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),

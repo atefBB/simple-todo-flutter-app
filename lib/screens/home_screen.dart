@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../generated/app_localizations.dart';
 import '../providers/task_provider.dart';
 import '../widgets/task_card.dart';
 import '../widgets/empty_state.dart';
@@ -10,9 +11,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Family Todo'),
+        title: Text(l10n.appTitle),
         centerTitle: true,
         actions: [
           IconButton(
@@ -40,7 +43,7 @@ class HomeScreen extends StatelessWidget {
                   Icon(Icons.error_outline, size: 64, color: Colors.red[300]),
                   const SizedBox(height: 16),
                   Text(
-                    'Something went wrong',
+                    l10n.somethingWentWrong,
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
@@ -67,7 +70,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               if (pendingTasks.isNotEmpty) ...[
                 Text(
-                  'To Do (${pendingTasks.length})',
+                  l10n.toDo(pendingTasks.length),
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Colors.grey[600],
                       ),
@@ -80,7 +83,7 @@ class HomeScreen extends StatelessWidget {
               if (completedTasks.isNotEmpty) ...[
                 const SizedBox(height: 24),
                 Text(
-                  'Completed (${completedTasks.length})',
+                  l10n.completed(completedTasks.length),
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         color: Colors.grey[600],
                       ),

@@ -1,0 +1,184 @@
+{
+  "@@locale": "en",
+  "appTitle": "Family Todo",
+
+  "@selectLanguage": {
+    "description": "Title on language selection screen"
+  },
+  "selectLanguage": "Select Language",
+
+  "@english": {
+    "description": "English language option"
+  },
+  "english": "English",
+
+  "@arabic": {
+    "description": "Arabic language option"
+  },
+  "arabic": "العربية",
+
+  "@welcome": {
+    "description": "Welcome heading on setup screen"
+  },
+  "welcome": "Welcome",
+
+  "@pickNickname": {
+    "description": "Subtitle prompting user to enter a nickname"
+  },
+  "pickNickname": "Pick a nickname to get started",
+
+  "@yourNickname": {
+    "description": "Label for nickname text field"
+  },
+  "yourNickname": "Your nickname",
+
+  "@createFamily": {
+    "description": "Button to create a new family"
+  },
+  "createFamily": "Create Family",
+
+  "@joinFamily": {
+    "description": "Button to join an existing family"
+  },
+  "joinFamily": "Join Family",
+
+  "@joinFamilyDialog": {
+    "description": "Title of the join family dialog"
+  },
+  "joinFamilyDialog": "Join Family",
+
+  "@familyCode": {
+    "description": "Label for family code text field"
+  },
+  "familyCode": "Family code",
+
+  "@familyCodeHint": {
+    "description": "Hint text for family code input"
+  },
+  "familyCodeHint": "e.g. FAM123",
+
+  "@cancel": {
+    "description": "Cancel button label"
+  },
+  "cancel": "Cancel",
+
+  "@join": {
+    "description": "Join button label"
+  },
+  "join": "Join",
+
+  "@somethingWentWrong": {
+    "description": "Error message heading"
+  },
+  "somethingWentWrong": "Something went wrong",
+
+  "@toDo": {
+    "description": "Section header for pending tasks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "toDo": "To Do ({count})",
+
+  "@completed": {
+    "description": "Section header for completed tasks",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "completed": "Completed ({count})",
+
+  "@addTask": {
+    "description": "App bar title on add task screen"
+  },
+  "addTask": "Add Task",
+
+  "@taskTitle": {
+    "description": "Label for task title text field"
+  },
+  "taskTitle": "Task title",
+
+  "@descriptionOptional": {
+    "description": "Label for description text field"
+  },
+  "descriptionOptional": "Description (optional)",
+
+  "@addTaskButton": {
+    "description": "Button to add a task"
+  },
+  "addTaskButton": "Add Task",
+
+  "@createdBy": {
+    "description": "Shows who created the task",
+    "placeholders": {
+      "user": {
+        "type": "String"
+      }
+    }
+  },
+  "createdBy": "Created by: {user}",
+
+  "@doneDate": {
+    "description": "Shows when task was completed",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "doneDate": "Done: {date}",
+
+  "@createdDate": {
+    "description": "Shows when task was created",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "createdDate": "Created: {date}",
+
+  "@deleteTask": {
+    "description": "Title of delete confirmation dialog"
+  },
+  "deleteTask": "Delete Task",
+
+  "@deleteConfirm": {
+    "description": "Delete confirmation message",
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteConfirm": "Delete \"{title}\"?",
+
+  "@delete": {
+    "description": "Delete button label"
+  },
+  "delete": "Delete",
+
+  "@noTasksYet": {
+    "description": "Empty state title"
+  },
+  "noTasksYet": "No tasks yet",
+
+  "@tapToAdd": {
+    "description": "Empty state subtitle"
+  },
+  "tapToAdd": "Tap the + button to add your first task",
+
+  "@errorPrefix": {
+    "description": "Error message prefix",
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "errorPrefix": "Error: {message}"
+}

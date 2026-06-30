@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../generated/app_localizations.dart';
 import '../models/task.dart';
 import '../providers/task_provider.dart';
 import '../services/supabase_service.dart';
@@ -28,6 +29,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   Future<void> _addTask() async {
+    final l10n = AppLocalizations.of(context)!;
     final title = _titleController.text.trim();
     if (title.isEmpty) return;
 
@@ -58,7 +60,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(l10n.errorPrefix(e.toString()))),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -67,9 +69,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Task'),
+        title: Text(l10n.addTask),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -77,10 +81,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Task title',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.task),
+              decoration: InputDecoration(
+                labelText: l10n.taskTitle,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.task),
               ),
               autofocus: true,
               textCapitalization: TextCapitalization.sentences,
@@ -88,10 +92,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             const SizedBox(height: 16),
             TextField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description (optional)',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.description),
+              decoration: InputDecoration(
+                labelText: l10n.descriptionOptional,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.description),
               ),
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,
@@ -108,7 +112,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         width: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Add Task'),
+                    : Text(l10n.addTaskButton),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../generated/app_localizations.dart';
 
 class FamilyCodeDialog extends StatefulWidget {
   const FamilyCodeDialog({super.key});
@@ -18,15 +19,17 @@ class _FamilyCodeDialogState extends State<FamilyCodeDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return AlertDialog(
-      title: const Text('Join Family'),
+      title: Text(l10n.joinFamilyDialog),
       content: TextField(
         controller: _codeController,
-        decoration: const InputDecoration(
-          labelText: 'Family code',
-          border: OutlineInputBorder(),
-          prefixIcon: Icon(Icons.group),
-          hintText: 'e.g. FAM123',
+        decoration: InputDecoration(
+          labelText: l10n.familyCode,
+          border: const OutlineInputBorder(),
+          prefixIcon: const Icon(Icons.group),
+          hintText: l10n.familyCodeHint,
         ),
         textCapitalization: TextCapitalization.characters,
         autofocus: true,
@@ -34,11 +37,12 @@ class _FamilyCodeDialogState extends State<FamilyCodeDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(l10n.cancel),
         ),
         ElevatedButton(
-          onPressed: () => Navigator.pop(context, _codeController.text.trim().toUpperCase()),
-          child: const Text('Join'),
+          onPressed: () =>
+              Navigator.pop(context, _codeController.text.trim().toUpperCase()),
+          child: Text(l10n.join),
         ),
       ],
     );

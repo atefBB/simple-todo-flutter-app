@@ -1,0 +1,62 @@
+{
+  "@@locale": "ar",
+  "appTitle": "قائمة المهام العائلية",
+
+  "selectLanguage": "اختر اللغة",
+
+  "english": "الإنجليزية",
+
+  "arabic": "العربية",
+
+  "welcome": "مرحباً",
+
+  "pickNickname": "اختر لقباً للبدء",
+
+  "yourNickname": "لقبك",
+
+  "createFamily": "إنشاء عائلة",
+
+  "joinFamily": "انضمام لعائلة",
+
+  "joinFamilyDialog": "انضمام لعائلة",
+
+  "familyCode": "رمز العائلة",
+
+  "familyCodeHint": "مثال: FAM123",
+
+  "cancel": "إلغاء",
+
+  "join": "انضمام",
+
+  "somethingWentWrong": "حدث خطأ ما",
+
+  "toDo": "مهام ({count})",
+
+  "completed": "مكتملة ({count})",
+
+  "addTask": "إضافة مهمة",
+
+  "taskTitle": "عنوان المهمة",
+
+  "descriptionOptional": "الوصف (اختياري)",
+
+  "addTaskButton": "إضافة مهمة",
+
+  "createdBy": "تم إنشاؤها بواسطة: {user}",
+
+  "doneDate": "تم: {date}",
+
+  "createdDate": "تم الإنشاء: {date}",
+
+  "deleteTask": "حذف المهمة",
+
+  "deleteConfirm": "حذف \"{title}\"?",
+
+  "delete": "حذف",
+
+  "noTasksYet": "لا توجد مهام بعد",
+
+  "tapToAdd": "اضغط على زر + لإضافة مهمتك الأولى",
+
+  "errorPrefix": "خطأ: {message}"
+}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import '../generated/app_localizations.dart';
 import '../models/family_member.dart';
 import '../providers/task_provider.dart';
 import '../services/supabase_service.dart';
@@ -30,6 +31,7 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   Future<void> _createFamily() async {
+    final l10n = AppLocalizations.of(context)!;
     final nickname = _nicknameController.text.trim();
     if (nickname.isEmpty) return;
 
@@ -60,7 +62,7 @@ class _SetupScreenState extends State<SetupScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(l10n.errorPrefix(e.toString()))),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -68,6 +70,7 @@ class _SetupScreenState extends State<SetupScreen> {
   }
 
   Future<void> _joinFamily() async {
+    final l10n = AppLocalizations.of(context)!;
     final nickname = _nicknameController.text.trim();
     if (nickname.isEmpty) return;
 
@@ -104,7 +107,7 @@ class _SetupScreenState extends State<SetupScreen> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text(l10n.errorPrefix(e.toString()))),
       );
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -113,9 +116,11 @@ class _SetupScreenState extends State<SetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Family Todo'),
+        title: Text(l10n.appTitle),
         centerTitle: true,
       ),
       body: Center(
@@ -125,12 +130,12 @@ class _SetupScreenState extends State<SetupScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Welcome',
+                l10n.welcome,
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               const SizedBox(height: 8),
               Text(
-                'Pick a nickname to get started',
+                l10n.pickNickname,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                       color: Colors.grey[600],
                     ),
@@ -138,10 +143,10 @@ class _SetupScreenState extends State<SetupScreen> {
               const SizedBox(height: 32),
               TextField(
                 controller: _nicknameController,
-                decoration: const InputDecoration(
-                  labelText: 'Your nickname',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+                decoration: InputDecoration(
+                  labelText: l10n.yourNickname,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.person),
                 ),
                 textCapitalization: TextCapitalization.words,
               ),
@@ -157,7 +162,7 @@ class _SetupScreenState extends State<SetupScreen> {
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Create Family'),
+                      : Text(l10n.createFamily),
                 ),
               ),
               const SizedBox(height: 12),
@@ -166,7 +171,7 @@ class _SetupScreenState extends State<SetupScreen> {
                 height: 48,
                 child: OutlinedButton(
                   onPressed: _isLoading ? null : _joinFamily,
-                  child: const Text('Join Family'),
+                  child: Text(l10n.joinFamily),
                 ),
               ),
             ],
