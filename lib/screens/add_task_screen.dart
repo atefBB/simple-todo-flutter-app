@@ -39,22 +39,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
     if (picked == null || !mounted) return;
 
-    final time = await showTimePicker(
-      context: context,
-      initialTime: _dueDate != null
-          ? TimeOfDay.fromDateTime(_dueDate!)
-          : const TimeOfDay(hour: 23, minute: 59),
-    );
-    if (time == null || !mounted) return;
-
     setState(() {
-      _dueDate = DateTime(
-        picked.year,
-        picked.month,
-        picked.day,
-        time.hour,
-        time.minute,
-      );
+      _dueDate = DateTime(picked.year, picked.month, picked.day);
     });
   }
 
@@ -181,8 +167,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   String _formatDueDate(DateTime date) {
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-    return '${date.day}/${date.month}/${date.year} $hour:$minute';
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year.toString().padLeft(2, '0');
+    return '$day-$month-$year';
   }
 }

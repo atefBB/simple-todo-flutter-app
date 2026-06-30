@@ -87,7 +87,7 @@ class TaskCard extends StatelessWidget {
   void _showTaskDetails(BuildContext context, AppLocalizations l10n) {
     final isOverdue = task.dueAt != null &&
         !task.isDone &&
-        task.dueAt!.isBefore(DateTime.now());
+        !task.dueAt!.isAfter(DateTime.now());
 
     showModalBottomSheet(
       context: context,
@@ -183,9 +183,10 @@ class TaskCard extends StatelessWidget {
   }
 
   String _formatDueDate(DateTime date) {
-    final hour = date.hour.toString().padLeft(2, '0');
-    final minute = date.minute.toString().padLeft(2, '0');
-    return '${date.day}/${date.month}/${date.year} $hour:$minute';
+    final day = date.day.toString().padLeft(2, '0');
+    final month = date.month.toString().padLeft(2, '0');
+    final year = date.year.toString().padLeft(2, '0');
+    return '$day-$month-$year';
   }
 
   String _formatDate(DateTime date) {
