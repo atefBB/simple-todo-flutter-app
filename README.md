@@ -9,8 +9,8 @@ Me and my wife needed a dead-simple way to share household tasks without clutter
 ## Features
 
 - **Language selection** — Choose English or Arabic on first launch (persisted across restarts).
-- **Add tasks** — Give it a title, description, and an optional due date/time.
-- **Due dates** — Pick a due date and time when creating a task; overdue tasks are highlighted in red with a warning icon.
+- **Add tasks** — Give it a title, description, and an optional due date.
+- **Due dates** — Pick a due date (dd-mm-yy) when creating a task; overdue tasks are highlighted in red with a warning icon.
 - **Mark as done** — Check off tasks when they're completed.
 - **Delete tasks** — Remove tasks you no longer need.
 - **Real-time sync** — Changes appear instantly on all linked devices via Supabase Realtime.
