@@ -242,6 +242,18 @@ abstract class AppLocalizations {
   /// **'Created: {date}'**
   String createdDate(String date);
 
+  /// Shows due date of a task
+  ///
+  /// In en, this message translates to:
+  /// **'Due: {date}'**
+  String dueDate(String date);
+
+  /// Hint text shown when no due date is set
+  ///
+  /// In en, this message translates to:
+  /// **'Set a due date'**
+  String get dueDateHint;
+
   /// Title of delete confirmation dialog
   ///
   /// In en, this message translates to:

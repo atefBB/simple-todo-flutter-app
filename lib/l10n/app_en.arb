@@ -142,6 +142,21 @@
   },
   "createdDate": "Created: {date}",
 
+  "@dueDate": {
+    "description": "Shows due date of a task",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dueDate": "Due: {date}",
+
+  "@dueDateHint": {
+    "description": "Hint text shown when no due date is set"
+  },
+  "dueDateHint": "Set a due date",
+
   "@deleteTask": {
     "description": "Title of delete confirmation dialog"
   },

@@ -13,6 +13,9 @@ class TaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<TaskProvider>();
     final l10n = AppLocalizations.of(context)!;
+    final isOverdue = task.dueAt != null &&
+        !task.isDone &&
+        task.dueAt!.isBefore(DateTime.now());
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -28,13 +31,7 @@ class TaskCard extends StatelessWidget {
             color: task.isDone ? Colors.grey : null,
           ),
         ),
-        subtitle: task.description.isNotEmpty
-            ? Text(
-                task.description,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              )
-            : null,
+        subtitle: _buildSubtitle(l10n, isOverdue),
         trailing: IconButton(
           icon: const Icon(Icons.delete_outline),
           onPressed: () => _confirmDelete(context, provider, l10n),
@@ -44,7 +41,54 @@ class TaskCard extends StatelessWidget {
     );
   }
 
+  Widget? _buildSubtitle(AppLocalizations l10n, bool isOverdue) {
+    final lines = <Widget>[];
+
+    if (task.description.isNotEmpty) {
+      lines.add(
+        Text(
+          task.description,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      );
+    }
+
+    if (task.dueAt != null) {
+      lines.add(
+        Row(
+          children: [
+            if (isOverdue)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: Icon(Icons.warning_amber_rounded,
+                    size: 14, color: Colors.red[400]),
+              ),
+            Text(
+              l10n.dueDate(_formatDueDate(task.dueAt!)),
+              style: TextStyle(
+                fontSize: 12,
+                color: isOverdue ? Colors.red[400] : Colors.grey[600],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (lines.isEmpty) return null;
+    if (lines.length == 1) return lines.first;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: lines,
+    );
+  }
+
   void _showTaskDetails(BuildContext context, AppLocalizations l10n) {
+    final isOverdue = task.dueAt != null &&
+        !task.isDone &&
+        task.dueAt!.isBefore(DateTime.now());
+
     showModalBottomSheet(
       context: context,
       builder: (context) => Padding(
@@ -69,6 +113,26 @@ class TaskCard extends StatelessWidget {
                 Text(l10n.createdBy(task.createdBy)),
               ],
             ),
+            if (task.dueAt != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    isOverdue ? Icons.warning_amber_rounded : Icons.event,
+                    size: 16,
+                    color: isOverdue ? Colors.red[400] : null,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    l10n.dueDate(_formatDueDate(task.dueAt!)),
+                    style: TextStyle(
+                      color: isOverdue ? Colors.red[400] : null,
+                      fontWeight: isOverdue ? FontWeight.w600 : null,
+                    ),
+                  ),
+                ],
+              ),
+            ],
             if (task.doneAt != null) ...[
               const SizedBox(height: 8),
               Row(
@@ -116,6 +180,12 @@ class TaskCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String _formatDueDate(DateTime date) {
+    final hour = date.hour.toString().padLeft(2, '0');
+    final minute = date.minute.toString().padLeft(2, '0');
+    return '${date.day}/${date.month}/${date.year} $hour:$minute';
   }
 
   String _formatDate(DateTime date) {

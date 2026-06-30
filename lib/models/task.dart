@@ -8,6 +8,7 @@ class Task {
   String createdBy;
   DateTime createdAt;
   DateTime? doneAt;
+  DateTime? dueAt;
 
   Task({
     required this.id,
@@ -19,6 +20,7 @@ class Task {
     required this.createdBy,
     required this.createdAt,
     this.doneAt,
+    this.dueAt,
   });
 
   factory Task.fromJson(Map<String, dynamic> json) {
@@ -34,6 +36,9 @@ class Task {
       doneAt: json['done_at'] != null
           ? DateTime.parse(json['done_at'] as String)
           : null,
+      dueAt: json['due_at'] != null
+          ? DateTime.parse(json['due_at'] as String)
+          : null,
     );
   }
 
@@ -48,6 +53,7 @@ class Task {
       'created_by': createdBy,
       'created_at': createdAt.toIso8601String(),
       'done_at': doneAt?.toIso8601String(),
+      'due_at': dueAt?.toIso8601String(),
     };
   }
 
@@ -58,6 +64,7 @@ class Task {
       'is_done': isDone,
       'assigned_to': assignedTo,
       'done_at': doneAt?.toIso8601String(),
+      'due_at': dueAt?.toIso8601String(),
     };
   }
 
@@ -67,6 +74,7 @@ class Task {
     bool? isDone,
     String? assignedTo,
     DateTime? doneAt,
+    DateTime? dueAt,
   }) {
     return Task(
       id: id,
@@ -78,6 +86,7 @@ class Task {
       createdBy: createdBy,
       createdAt: createdAt,
       doneAt: doneAt ?? this.doneAt,
+      dueAt: dueAt ?? this.dueAt,
     );
   }
 }

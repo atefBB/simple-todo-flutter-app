@@ -19,6 +19,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
+  DateTime? _dueDate;
   bool _isLoading = false;
 
   @override
@@ -26,6 +27,35 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickDueDate() async {
+    final now = DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _dueDate ?? now,
+      firstDate: now.subtract(const Duration(days: 365)),
+      lastDate: now.add(const Duration(days: 365 * 5)),
+    );
+    if (picked == null || !mounted) return;
+
+    final time = await showTimePicker(
+      context: context,
+      initialTime: _dueDate != null
+          ? TimeOfDay.fromDateTime(_dueDate!)
+          : const TimeOfDay(hour: 23, minute: 59),
+    );
+    if (time == null || !mounted) return;
+
+    setState(() {
+      _dueDate = DateTime(
+        picked.year,
+        picked.month,
+        picked.day,
+        time.hour,
+        time.minute,
+      );
+    });
   }
 
   Future<void> _addTask() async {
@@ -52,6 +82,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         description: _descriptionController.text.trim(),
         createdBy: uid,
         createdAt: DateTime.now(),
+        dueAt: _dueDate,
       );
 
       await taskProvider.addTask(task);
@@ -70,6 +101,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -78,6 +110,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               controller: _titleController,
@@ -100,7 +133,33 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 20),
+            InkWell(
+              onTap: _pickDueDate,
+              borderRadius: BorderRadius.circular(8),
+              child: InputDecorator(
+                decoration: InputDecoration(
+                  labelText: l10n.dueDateHint,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.event),
+                  suffixIcon: _dueDate != null
+                      ? IconButton(
+                          icon: const Icon(Icons.clear),
+                          onPressed: () => setState(() => _dueDate = null),
+                        )
+                      : null,
+                ),
+                child: Text(
+                  _dueDate != null
+                      ? _formatDueDate(_dueDate!)
+                      : l10n.dueDateHint,
+                  style: TextStyle(
+                    color: _dueDate != null ? null : theme.hintColor,
+                  ),
+                ),
+              ),
+            ),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               height: 48,
@@ -119,5 +178,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         ),
       ),
     );
+  }
+
+  String _formatDueDate(DateTime date) {
+    final hour = date.hour.toString().padLeft(2, '0');
+    final minute = date.minute.toString().padLeft(2, '0');
+    return '${date.day}/${date.month}/${date.year} $hour:$minute';
   }
 }

@@ -91,6 +91,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String dueDate(String date) {
+    return 'Due: $date';
+  }
+
+  @override
+  String get dueDateHint => 'Set a due date';
+
+  @override
   String get deleteTask => 'Delete Task';
 
   @override
