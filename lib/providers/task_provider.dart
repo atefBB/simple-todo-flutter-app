@@ -70,8 +70,12 @@ class TaskProvider extends ChangeNotifier {
         isDone: !task.isDone,
         doneAt: !task.isDone ? DateTime.now() : null,
       );
+      final index = _tasks.indexWhere((t) => t.id == task.id);
+      if (index != -1) {
+        _tasks[index] = updated;
+        notifyListeners();
+      }
       await _supabaseService.updateTask(updated);
-      // The realtime subscription will update the local list
     } catch (e) {
       _error = e.toString();
       notifyListeners();
@@ -80,9 +84,13 @@ class TaskProvider extends ChangeNotifier {
 
   Future<void> updateTask(Task task) async {
     try {
+      final index = _tasks.indexWhere((t) => t.id == task.id);
+      if (index != -1) {
+        _tasks[index] = task;
+        notifyListeners();
+      }
       await _supabaseService.updateTask(task);
       _error = null;
-      // The realtime subscription will update the local list
     } catch (e) {
       _error = e.toString();
       notifyListeners();
@@ -91,9 +99,10 @@ class TaskProvider extends ChangeNotifier {
 
   Future<void> deleteTask(String taskId) async {
     try {
+      _tasks.removeWhere((t) => t.id == taskId);
+      notifyListeners();
       await _supabaseService.deleteTask(taskId);
       _error = null;
-      // The realtime subscription will update the local list
     } catch (e) {
       _error = e.toString();
       notifyListeners();
