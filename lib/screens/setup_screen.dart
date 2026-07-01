@@ -20,6 +20,15 @@ class SetupScreen extends StatefulWidget {
 class _SetupScreenState extends State<SetupScreen> {
   final _nicknameController = TextEditingController();
   bool _isLoading = false;
+  bool _nicknameNotEmpty = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nicknameController.addListener(() {
+      setState(() => _nicknameNotEmpty = _nicknameController.text.trim().isNotEmpty);
+    });
+  }
 
   @override
   void dispose() {
@@ -162,7 +171,7 @@ class _SetupScreenState extends State<SetupScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _createFamily,
+                  onPressed: (_isLoading || !_nicknameNotEmpty) ? null : _createFamily,
                   child: _isLoading
                       ? const SizedBox(
                           height: 20,
@@ -177,7 +186,7 @@ class _SetupScreenState extends State<SetupScreen> {
                 width: double.infinity,
                 height: 48,
                 child: OutlinedButton(
-                  onPressed: _isLoading ? null : _joinFamily,
+                  onPressed: (_isLoading || !_nicknameNotEmpty) ? null : _joinFamily,
                   child: Text(l10n.joinFamily),
                 ),
               ),
