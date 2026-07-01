@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import '../generated/app_localizations.dart';
@@ -49,6 +50,9 @@ class _SetupScreenState extends State<SetupScreen> {
 
       if (!mounted) return;
 
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('family_code', code);
+
       final taskProvider = context.read<TaskProvider>();
       taskProvider.setFamilyCode(code);
       await taskProvider.loadTasks(code);
@@ -93,6 +97,9 @@ class _SetupScreenState extends State<SetupScreen> {
       await supabase.joinFamily(code, member);
 
       if (!mounted) return;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('family_code', code);
 
       final taskProvider = context.read<TaskProvider>();
       taskProvider.setFamilyCode(code);
