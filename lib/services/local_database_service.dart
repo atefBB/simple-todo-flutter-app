@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:sembast/sembast.dart';
@@ -10,13 +11,12 @@ class LocalDatabaseService {
 
   Future<void> init() async {
     final factory = databaseFactory;
-    final dbPath = await _getDbPath();
-    _db = await factory.openDatabase(dbPath);
-  }
-
-  Future<String> _getDbPath() async {
-    final dir = await getApplicationDocumentsDirectory();
-    return p.join(dir.path, 'todo_cache.db');
+    if (kIsWeb) {
+      _db = await factory.openDatabase('todo_cache');
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      _db = await factory.openDatabase(p.join(dir.path, 'todo_cache.db'));
+    }
   }
 
   StoreRef<String, Map<String, dynamic>> get _store =>
