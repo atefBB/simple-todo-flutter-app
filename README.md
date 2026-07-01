@@ -26,7 +26,7 @@ Me and my wife needed a dead-simple way to share household tasks without clutter
 | **Framework** | Flutter (Dart) |
 | **State Management** | Provider (`provider` package) |
 | **Localization** | Flutter l10n (ARB files + code generation) |
-| **Local Storage** | SQLite (`sqflite`) + `SharedPreferences` |
+| **Local Storage** | `sembast` (cross-platform NoSQL) + `SharedPreferences` |
 | **Connectivity** | `connectivity_plus` (network monitoring + auto-sync) |
 | **Backend** | Supabase (PostgreSQL + Realtime) |
 | **Auth** | Supabase Anonymous Auth (no-account device identity) |
@@ -244,9 +244,13 @@ lib/
 │   ├── task.dart              # Task data model (includes dueAt)
 │   └── family_member.dart     # Family member model
 ├── services/
-│   ├── supabase_service.dart       # Supabase client & all DB operations
-│   ├── local_database_service.dart # Local SQLite cache (sqflite)
-│   └── connectivity_service.dart   # Network monitoring + auto-sync trigger
+│   ├── supabase_service.dart           # Supabase client & all DB operations
+│   ├── local_database_service.dart     # Local cache (sembast document store)
+│   ├── connectivity_service.dart       # Network monitoring + auto-sync trigger
+│   ├── db_factory.dart                 # Conditional import facade (platform)
+│   ├── db_factory_stub.dart            #   stub (fallback)
+│   ├── db_factory_io.dart              #   IO implementation (mobile/desktop)
+│   └── db_factory_web.dart             #   Web implementation (IndexedDB)
 ├── providers/
 │   ├── task_provider.dart     # State management for tasks
 │   └── language_provider.dart # Language preference persistence

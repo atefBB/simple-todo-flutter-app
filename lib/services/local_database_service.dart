@@ -1,95 +1,86 @@
-import 'package:sqflite/sqflite.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:sembast/sembast.dart';
 
+import 'db_factory.dart';
 import '../models/task.dart';
 
 class LocalDatabaseService {
   Database? _db;
 
   Future<void> init() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, 'todo_cache.db');
-    _db = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute('''
-          CREATE TABLE tasks (
-            id TEXT PRIMARY KEY,
-            family_code TEXT NOT NULL,
-            title TEXT NOT NULL,
-            description TEXT DEFAULT '',
-            is_done INTEGER DEFAULT 0,
-            assigned_to TEXT,
-            created_by TEXT NOT NULL,
-            created_at TEXT NOT NULL,
-            done_at TEXT,
-            due_at TEXT,
-            sync_status TEXT NOT NULL DEFAULT 'synced'
-          )
-        ''');
-      },
-    );
+    final factory = databaseFactory;
+    final dbPath = await _getDbPath();
+    _db = await factory.openDatabase(dbPath);
   }
 
+  Future<String> _getDbPath() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return p.join(dir.path, 'todo_cache.db');
+  }
+
+  StoreRef<String, Map<String, dynamic>> get _store =>
+      StoreRef<String, Map<String, dynamic>>('tasks');
+
   Future<List<Task>> getTasks(String familyCode) async {
-    final rows = await _db!.query(
-      'tasks',
-      where: 'family_code = ? AND sync_status != ?',
-      whereArgs: [familyCode, 'pending_delete'],
-      orderBy: 'created_at ASC',
+    final records = await _store.find(
+      _db!,
+      finder: Finder(
+        filter: Filter.and([
+          Filter.equals('family_code', familyCode),
+          Filter.notEquals('sync_status', 'pending_delete'),
+        ]),
+        sortOrders: [SortOrder('created_at')],
+      ),
     );
-    return rows.map(_rowToTask).toList();
+    return records.map((r) => _rowToTask(r.value)).toList();
   }
 
   Future<List<Map<String, dynamic>>> getPendingOperations() async {
-    return _db!.query(
-      'tasks',
-      where: 'sync_status != ?',
-      whereArgs: ['synced'],
-      orderBy: 'created_at ASC',
+    final records = await _store.find(
+      _db!,
+      finder: Finder(
+        filter: Filter.notEquals('sync_status', 'synced'),
+        sortOrders: [SortOrder('created_at')],
+      ),
     );
+    return records.map((r) => r.value).toList();
   }
 
   Future<void> upsertTask(Task task, {String syncStatus = 'synced'}) async {
-    await _db!.insert(
-      'tasks',
-      _taskToRow(task, syncStatus),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
+    await _store.record(task.id).put(_db!, _taskToRow(task, syncStatus));
   }
 
   Future<void> updateSyncStatus(String taskId, String status) async {
-    await _db!.update(
-      'tasks',
-      {'sync_status': status},
-      where: 'id = ?',
-      whereArgs: [taskId],
-    );
+    final record = await _store.record(taskId).get(_db!);
+    if (record != null) {
+      record['sync_status'] = status;
+      await _store.record(taskId).put(_db!, record);
+    }
   }
 
   Future<void> deleteTask(String taskId) async {
-    await _db!.delete('tasks', where: 'id = ?', whereArgs: [taskId]);
+    await _store.record(taskId).delete(_db!);
   }
 
   Future<void> replaceAllTasks(String familyCode, List<Task> tasks) async {
     await _db!.transaction((txn) async {
-      await txn.delete('tasks', where: 'family_code = ?', whereArgs: [familyCode]);
+      final records = await _store.find(
+        txn,
+        finder: Finder(filter: Filter.equals('family_code', familyCode)),
+      );
+      for (final r in records) {
+        await _store.record(r.key).delete(txn);
+      }
       for (final task in tasks) {
-        await txn.insert('tasks', _taskToRow(task, 'synced'));
+        await _store.record(task.id).put(txn, _taskToRow(task, 'synced'));
       }
     });
   }
 
   Future<String?> getSyncStatus(String taskId) async {
-    final rows = await _db!.query(
-      'tasks',
-      columns: ['sync_status'],
-      where: 'id = ?',
-      whereArgs: [taskId],
-    );
-    if (rows.isEmpty) return null;
-    return rows.first['sync_status'] as String;
+    final record = await _store.record(taskId).get(_db!);
+    return record?['sync_status'] as String?;
   }
 
   Task _rowToTask(Map<String, dynamic> row) {
