@@ -155,7 +155,7 @@
   "@dueDateHint": {
     "description": "Hint text shown when no due date is set"
   },
-  "dueDateHint": "Set a due date",
+  "dueDateHint": "Set a due date (optional)",
 
   "@deleteTask": {
     "description": "Title of delete confirmation dialog"

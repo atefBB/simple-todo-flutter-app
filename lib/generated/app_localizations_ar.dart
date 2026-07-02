@@ -96,7 +96,7 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String get dueDateHint => 'حدد تاريخ الاستحقاق';
+  String get dueDateHint => 'حدد تاريخ الاستحقاق (اختياري)';
 
   @override
   String get deleteTask => 'حذف المهمة';

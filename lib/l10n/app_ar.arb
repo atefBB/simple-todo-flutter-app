@@ -60,7 +60,7 @@
 
   "dueDate": "تاريخ الاستحقاق: {date}",
 
-  "dueDateHint": "حدد تاريخ الاستحقاق",
+  "dueDateHint": "حدد تاريخ الاستحقاق (اختياري)",
 
   "errorPrefix": "خطأ: {message}"
 }

@@ -251,7 +251,7 @@ abstract class AppLocalizations {
   /// Hint text shown when no due date is set
   ///
   /// In en, this message translates to:
-  /// **'Set a due date'**
+  /// **'Set a due date (optional)'**
   String get dueDateHint;
 
   /// Title of delete confirmation dialog
