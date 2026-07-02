@@ -1,10 +1,10 @@
-# 🏠 Family Todo App
+# Family Todo App
 
-A simple, shared todo app built with **Flutter** and **Supabase** — designed for me and my wife to keep track of family tasks. No sign-up, no passwords, just a family code to link devices. Available in English and Arabic.
+A simple, shared todo app built with **Flutter** and **Supabase** for keeping family tasks in one shared list. No sign-up, no passwords: each device joins with a family code. Available in English and Arabic.
 
 ## Why this exists
 
-Me and my wife needed a dead-simple way to share household tasks without cluttering each other's personal todo lists or signing up for yet another service. This app is that: open it, pick a language, enter the family code, and start adding tasks that sync instantly to both devices.
+We needed a dead-simple way to share household tasks without cluttering personal todo lists or signing up for another service. This app is that: open it, pick a language, enter the family code, and start adding tasks that sync instantly across linked devices.
 
 ## Features
 
@@ -13,7 +13,7 @@ Me and my wife needed a dead-simple way to share household tasks without clutter
 - **Due dates** — Pick a due date (dd-mm-yy) when creating a task; overdue tasks are highlighted in red with a warning icon.
 - **Mark as done** — Check off tasks when they're completed.
 - **Delete tasks** — Remove tasks you no longer need.
-- **Offline-first** — Tasks are cached locally in SQLite; the app works fully offline and syncs automatically when connectivity returns.
+- **Offline-first** — Tasks are cached locally with `sembast`; the app works offline and syncs automatically when connectivity returns.
 - **Real-time sync** — Changes appear instantly on all linked devices via Supabase Realtime.
 - **Family code sharing** — One code links all devices to the same task list. No accounts needed.
 - **Nickname-based attribution** — Each person picks a nickname on first launch so you can see who added or completed what.
@@ -30,7 +30,7 @@ Me and my wife needed a dead-simple way to share household tasks without clutter
 | **Connectivity** | `connectivity_plus` (network monitoring + auto-sync) |
 | **Backend** | Supabase (PostgreSQL + Realtime) |
 | **Auth** | Supabase Anonymous Auth (no-account device identity) |
-| **Platforms** | Android, iOS |
+| **Platforms** | Android, iOS, web, Linux, macOS, Windows |
 
 ## Architecture Overview
 
@@ -147,18 +147,18 @@ The user's language choice is persisted with `SharedPreferences` and picked on f
 
 The app uses an **offline-first** architecture:
 
-1. **Local cache (SQLite):** All tasks are stored in a local SQLite database (`sqflite`). On launch, tasks load instantly from the cache.
-2. **Immediate writes:** Every create/update/delete writes to the local DB first, then attempts the remote Supabase call.
+1. **Local cache (`sembast`):** All tasks are stored in a local document database. Native platforms use an app-document database file, while web uses the `sembast_web` backend.
+2. **Immediate writes:** Every create/update/delete writes to the local cache first, then attempts the remote Supabase call.
 3. **Pending queue:** If the device is offline (or the server call fails), the operation is tagged with a sync status (`pending_create`, `pending_update`, or `pending_delete`) and queued locally.
 4. **Auto-sync on reconnect:** `connectivity_plus` monitors network state. When connectivity is restored, pending operations are replayed against the server in order, then a full pull reconciles the local cache with remote data.
-5. **Real-time subscription:** When online, the app subscribes to Supabase Realtime for instant updates from other devices. Incoming changes are written straight to the local DB.
+5. **Real-time subscription:** When online, the app subscribes to Supabase Realtime for instant updates from other devices. Incoming changes are written straight to the local cache.
 6. **Offline resume:** The family code is persisted in `SharedPreferences`, so reopening the app while offline shows the cached task list immediately.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Flutter SDK (>=3.0)
+- Flutter SDK compatible with Dart `^3.11.3`
 - A Supabase project (free tier is enough) — [create one here](https://supabase.com/dashboard)
 - Android Studio / Xcode (for emulators)
 
@@ -167,7 +167,7 @@ The app uses an **offline-first** architecture:
 1. **Clone the repo**
    ```bash
    git clone <repo-url>
-   cd family-todo
+   cd simple-android-todoapp
    ```
 
 2. **Add the `due_at` column to your Supabase tasks table**
@@ -276,7 +276,7 @@ lib/
 - [x] Arabic / English localization with first-launch language picker
 - [x] Due date / time support with overdue highlighting
 - [x] Polish UI / dark mode
-- [x] Add local SQLite caching for offline support
+- [x] Add local `sembast` caching for offline support
 - [ ] Add task reassignment between family members
 - [ ] Publish to Android (and iOS)
 
